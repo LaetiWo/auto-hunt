@@ -30,7 +30,6 @@ import { toast } from "@/hooks/use-toast";
 import { Loader, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import useForgotPasswordDialog from "@/hooks/use-forgot-password-dialog";
-import { useSearchParams } from "next/navigation";
 
 const LoginDialog = () => {
   const { open, onClose } = useLoginDialog();

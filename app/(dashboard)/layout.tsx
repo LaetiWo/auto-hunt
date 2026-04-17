@@ -2,6 +2,8 @@ import NavBar from "@/components/NavBar";
 import { getLoggedInUser } from "@/lib/appwrite";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardLayout({
   children,
 }: Readonly<{
