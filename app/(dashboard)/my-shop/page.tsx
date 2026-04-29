@@ -31,6 +31,8 @@ const MyShop = () => {
               description={shop?.description}
               isShopOwner={true}
               ownerName={user?.name}
+              ownerEmail={user?.email}
+              ownerPhone={user?.phone}
               shopOwnerUserId={user?.$id}
               isPending={isPending}
             />

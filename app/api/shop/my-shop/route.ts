@@ -17,7 +17,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       message: "Shop fetches successfully",
 
-      user: { $id: user.$id, name: user.name },
+      user: {
+        $id: user.$id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+      },
       listings: listings.documents,
     });
   } catch (error: any) {
