@@ -11,6 +11,7 @@ type ShopInfoProps = {
   ownerName: string;
   ownerEmail?: string;
   ownerPhone?: string;
+  ownerAvatarUrl?: string;
   description?: string;
   isShopOwner?: boolean;
   shopOwnerUserId: string;

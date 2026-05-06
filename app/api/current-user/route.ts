@@ -49,12 +49,15 @@ export const PATCH = async (req: NextRequest) => {
   try {
     const { account } = await createSessionClient();
     const { users } = await createAdminClient();
-    const { ownerName, ownerPhone } = await req.json();
+    const { ownerName, ownerPhone, avatarUrl } = await req.json();
 
     const user = await account.get();
 
     if (ownerName) await account.updateName(ownerName);
     if (ownerPhone) await users.updatePhone(user.$id, ownerPhone);
+    if (avatarUrl !== undefined) {
+      await account.updatePrefs({ ...user.prefs, avatarUrl });
+    }
 
     return NextResponse.json({ message: "Profil mis à jour" });
   } catch (error: any) {

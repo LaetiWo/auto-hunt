@@ -34,6 +34,7 @@ const MyShop = () => {
               ownerEmail={user?.email}
               ownerPhone={user?.phone}
               shopOwnerUserId={user?.$id}
+              ownerAvatarUrl={user?.prefs?.avatarUrl}
               isPending={isPending}
             />
           </div>

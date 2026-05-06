@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
         email: user.email,
         phone: user.phone,
       },
+      shop: null,
       listings: listings.documents,
     });
   } catch (error: any) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/helper";
@@ -20,6 +20,7 @@ interface PropsType {
   vehicleSlug: string;
   ownerName: string;
   ownerEmail: string;
+  ownerAvatarUrl?: string;
   type?: string;
 }
 
@@ -32,6 +33,7 @@ const ShopInfo = ({
   vehicleSlug,
   ownerName,
   ownerEmail,
+  ownerAvatarUrl,
   type,
 }: PropsType) => {
   const { data } = useCurrentUser();
@@ -65,8 +67,16 @@ const ShopInfo = ({
                 href={`/profile/${shopOwnerUserId}`}
                 className="flex items-center gap-2"
               >
-                <Avatar className="h-28 w-28 border-2 p-[1px] border-card">
+                {/* <Avatar className="h-28 w-28 border-2 p-[1px] border-card">
                   <AvatarFallback className="bg-primary/40 font-semibold text-3xl  uppercase ">
+                    {ownerName?.charAt(0) || "S"}
+                    {ownerName?.charAt(1) || "H"}
+                  </AvatarFallback>
+                </Avatar> */}
+
+                <Avatar className="h-28 w-28 border-2 p-[1px] border-card">
+                  <AvatarImage src={ownerAvatarUrl} />
+                  <AvatarFallback className="bg-primary/40 font-semibold text-3xl uppercase">
                     {ownerName?.charAt(0) || "S"}
                     {ownerName?.charAt(1) || "H"}
                   </AvatarFallback>
