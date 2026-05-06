@@ -62,7 +62,7 @@ const ShopInfo = ({
           <Card className="w-full bg-white rounded-lg shadow-custom mt-4">
             <CardContent className="!p-4">
               <Link
-                href={`/shop/${shopOwnerUserId}`}
+                href={`/profile/${shopOwnerUserId}`}
                 className="flex items-center gap-2"
               >
                 <Avatar className="h-28 w-28 border-2 p-[1px] border-card">

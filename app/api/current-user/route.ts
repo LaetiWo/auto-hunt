@@ -1,4 +1,4 @@
-import { createSessionClient } from "@/lib/appwrite";
+import { createAdminClient, createSessionClient } from "@/lib/appwrite";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { AUTH_COOKIE_NAME } from "@/constants/server";
@@ -43,5 +43,24 @@ export const GET = async (req: NextRequest) => {
         status: 200,
       },
     );
+  }
+};
+export const PATCH = async (req: NextRequest) => {
+  try {
+    const { account } = await createSessionClient();
+    const { users } = await createAdminClient();
+    const { ownerName, ownerPhone } = await req.json();
+
+    const user = await account.get();
+
+    if (ownerName) await account.updateName(ownerName);
+    if (ownerPhone) await users.updatePhone(user.$id, ownerPhone);
+
+    return NextResponse.json({ message: "Profil mis à jour" });
+  } catch (error: any) {
+    console.error("PATCH error full:", JSON.stringify(error, null, 2));
+    console.error("PATCH error message:", error.message);
+    console.error("PATCH error code:", error.code);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

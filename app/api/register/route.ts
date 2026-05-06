@@ -1,6 +1,5 @@
 import { AUTH_COOKIE_NAME } from "@/constants/server";
-import { APP_CONFIG } from "@/lib/app-config";
-import { createAdminClient } from "@/lib/appwrite";
+import { createAdminClient, createSessionClient } from "@/lib/appwrite";
 import { signupSchema } from "@/validation/auth.validation";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -22,11 +21,18 @@ export async function POST(request: Request) {
       maxAge: 60 * 60 * 24 * 30,
     });
 
+    //Envoie le mail de vérification — utilise la session du nouvel user
+    const { account: sessionAccount } = await createSessionClient();
+    await sessionAccount.createVerification(
+      `${process.env.NEXT_PUBLIC_APP_URL}/verify-email`,
+    );
+
     return NextResponse.json({
       message: "User created successfully",
       userId: user.$id,
     });
   } catch (error: any) {
+    console.error("REGISTER error:", error.message, error.code);
     return NextResponse.json(
       {
         error: error.message,

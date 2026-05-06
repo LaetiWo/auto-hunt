@@ -143,6 +143,10 @@ const NavBar = () => {
                     Réservations reçues
                   </DropdownMenuItem>
 
+                  {/* <DropdownMenuItem className="!cursor-pointer">
+                    Profil
+                  </DropdownMenuItem> */}
+
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={handleLogout}
