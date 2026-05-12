@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
         name: user.name,
         email: user.email,
         phone: user.phone,
+        prefs: user.prefs,
       },
       shop: null,
       listings: listings.documents,

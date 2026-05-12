@@ -22,7 +22,15 @@ export async function POST(request: Request) {
     });
 
     //Envoie le mail de vérification — utilise la session du nouvel user
-    const { account: sessionAccount } = await createSessionClient();
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const { Client, Account } = await import("node-appwrite");
+    const client = new Client()
+      .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
+      .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!)
+      .setSession(session.secret); // ← la session qu'on vient de créer
+
+    const sessionAccount = new Account(client);
     await sessionAccount.createVerification(
       `${process.env.NEXT_PUBLIC_APP_URL}/verify-email`,
     );
@@ -33,11 +41,6 @@ export async function POST(request: Request) {
     });
   } catch (error: any) {
     console.error("REGISTER error:", error.message, error.code);
-    return NextResponse.json(
-      {
-        error: error.message,
-      },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

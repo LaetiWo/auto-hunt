@@ -6,7 +6,7 @@ const Logo = () => {
   return (
     <Link href="/" className="flex items-center gap-2">
       <div className="relative size-7 bg-white rounded-full flex items-center justify-center">
-        <CarFrontIcon className="w-5 h-5 text-primary text-primary " />
+        <CarFrontIcon className="w-5 h-5 text-primary" />
         <span className="absolute -bottom-3 -right-2 ">
           <Dot />
         </span>

@@ -45,25 +45,54 @@ export const GET = async (req: NextRequest) => {
     );
   }
 };
+
 export const PATCH = async (req: NextRequest) => {
   try {
     const { account } = await createSessionClient();
     const { users } = await createAdminClient();
-    const { ownerName, ownerPhone, avatarUrl } = await req.json();
+    const { ownerName, ownerPhone, avatarUrl, description } = await req.json();
 
     const user = await account.get();
 
-    if (ownerName) await account.updateName(ownerName);
-    if (ownerPhone) await users.updatePhone(user.$id, ownerPhone);
-    if (avatarUrl !== undefined) {
-      await account.updatePrefs({ ...user.prefs, avatarUrl });
+    if (ownerName) {
+      try {
+        await account.updateName(ownerName);
+        console.log("updateName OK");
+      } catch (e: any) {
+        console.error("updateName failed:", e.message);
+      }
+    }
+
+    if (ownerPhone) {
+      try {
+        await users.updatePhone(user.$id, ownerPhone);
+        console.log("updatePhone OK");
+      } catch (e: any) {
+        // Bug Appwrite — le numéro est quand même mis à jour malgré l'erreur 409
+        if (e.code !== 409) {
+          console.error(" updatePhone failed:", e.message);
+          throw e; // re-throw seulement si ce n'est pas un 409
+        }
+        console.log("updatePhone OK (409 ignored)");
+      }
+    }
+
+    if (avatarUrl !== undefined || description !== undefined) {
+      try {
+        await account.updatePrefs({
+          ...user.prefs,
+          ...(avatarUrl !== undefined && { avatarUrl }),
+          ...(description !== undefined && { description }),
+        });
+        console.log("updatePrefs OK");
+      } catch (e: any) {
+        console.error(" updatePrefs failed:", e.message);
+      }
     }
 
     return NextResponse.json({ message: "Profil mis à jour" });
   } catch (error: any) {
-    console.error("PATCH error full:", JSON.stringify(error, null, 2));
-    console.error("PATCH error message:", error.message);
-    console.error("PATCH error code:", error.code);
+    console.error("PATCH error:", error.message, error.code);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

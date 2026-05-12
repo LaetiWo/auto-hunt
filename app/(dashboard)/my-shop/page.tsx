@@ -100,7 +100,7 @@ const MyShop = () => {
 };
 
 const PurchaseRequestsReceived = () => {
-  const queryClient = useQueryClient(); // 🆕
+  const queryClient = useQueryClient();
 
   const { data: requests, isPending } = useQuery({
     queryKey: ["purchase-requests-seller"],

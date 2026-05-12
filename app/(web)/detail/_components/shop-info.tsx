@@ -10,6 +10,7 @@ import React from "react";
 import PurchaseRequestButton from "./purchase-request-button";
 import { Button } from "@/components/ui/button";
 import useCurrentUser from "@/hooks/api/use-current-user";
+import { useQuery } from "@tanstack/react-query";
 
 interface PropsType {
   price: number;
@@ -20,7 +21,6 @@ interface PropsType {
   vehicleSlug: string;
   ownerName: string;
   ownerEmail: string;
-  ownerAvatarUrl?: string;
   type?: string;
 }
 
@@ -33,12 +33,20 @@ const ShopInfo = ({
   vehicleSlug,
   ownerName,
   ownerEmail,
-  ownerAvatarUrl,
   type,
 }: PropsType) => {
   const { data } = useCurrentUser();
   const currentUserId = data?.user?.$id;
   const isOwner = currentUserId === shopOwnerUserId;
+
+  // 👇 Ajoute ici
+  const { data: sellerData } = useQuery({
+    queryKey: ["seller", shopOwnerUserId],
+    queryFn: () =>
+      fetch(`/api/profile/${shopOwnerUserId}`).then((r) => r.json()),
+    enabled: !!shopOwnerUserId,
+  });
+  const ownerAvatarUrl = sellerData?.avatarUrl;
 
   return (
     <div className="w-full">
@@ -91,7 +99,6 @@ const ShopInfo = ({
                 </div>
               </Link>
 
-              {/* Propriétaire → bouton Modifier */}
               {isOwner ? (
                 <Link
                   href={`/my-shop/edit/${vehicleId}`}
