@@ -59,11 +59,16 @@ export async function createAnonymousClient() {
     },
   };
 }
-
 export async function getLoggedInUser() {
   try {
     const { account } = await createSessionClient();
-    return await account.get();
+    const user = await account.get();
+
+    if (!user.emailVerification) {
+      return null;
+    }
+
+    return user;
   } catch (error) {
     return null;
   }

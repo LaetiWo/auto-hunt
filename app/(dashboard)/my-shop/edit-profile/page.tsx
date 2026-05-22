@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useCurrentUser from "@/hooks/api/use-current-user";
+import { useQueryClient } from "@tanstack/react-query";
 
 const editProfileSchema = z.object({
   ownerName: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
@@ -47,6 +48,7 @@ const FieldRow = ({
 
 export default function EditProfilePage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data, isPending } = useCurrentUser();
   const user = data?.user;
 
@@ -118,6 +120,10 @@ export default function EditProfilePage() {
           ...(avatarUrl !== undefined && { avatarUrl }),
         }),
       });
+
+      //  invalide le cache pour forcer le rechargement
+      await queryClient.invalidateQueries({ queryKey: ["my-shop"] });
+      await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
 
       router.back();
     } catch (error) {
