@@ -1,21 +1,23 @@
 "use client";
-import React from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import {
+  Activity,
   Car,
+  Home,
   Key,
+  PlusCircle,
   Search,
   Store,
-  Activity,
-  PlusCircle,
-  Home,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import Logo from "./logo";
-import { Separator } from "./ui/separator";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import React from "react";
+
 import useCurrentUser from "@/hooks/api/use-current-user";
 import useLoginDialog from "@/hooks/use-login-dialog";
+import { cn } from "@/lib/utils";
+
+import Logo from "./logo";
+import { Separator } from "./ui/separator";
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -91,7 +93,7 @@ const Sidebar = () => {
 
   return (
     <aside className="hidden lg:flex flex-col w-64 h-screen sticky top-0 left-0 bg-background border-r border-border/50 shrink-0 z-20">
-      <div className="p-6 border-b border-border/30">
+      <div className="px-6 py-2 border-b border-border/30">
         <Logo />
       </div>
 

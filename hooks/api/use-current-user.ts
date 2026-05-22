@@ -5,7 +5,6 @@ const useCurrentUser = () => {
   return useQuery({
     queryKey: ["currentUser"],
     queryFn: getCurrentUserQueryFn,
-    staleTime: 0,
   });
 };
 

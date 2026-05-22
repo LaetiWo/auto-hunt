@@ -24,16 +24,16 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import useRegisterDialog from "@/hooks/use-register-dialog";
 import useLoginDialog from "@/hooks/use-login-dialog";
+import useOtpVerification from "@/hooks/use-otp-verification";
 import { registerMutationFn } from "@/lib/fetcher";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "@/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
 import { Loader, Eye, EyeOff } from "lucide-react";
 
 const RegisterDialog = () => {
   const { open, onClose } = useRegisterDialog();
-  const { onOpen } = useLoginDialog();
-
-  const queryClient = useQueryClient();
+  const { onOpen: onLoginOpen } = useLoginDialog();
+  const { show: showOtp } = useOtpVerification();
+  const [showPassword, setShowPassword] = useState(false);
 
   const { mutate, isPending } = useMutation({
     mutationFn: registerMutationFn,
@@ -41,32 +41,20 @@ const RegisterDialog = () => {
 
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
+    defaultValues: { name: "", email: "", password: "" },
   });
 
   const onSubmit = (values: z.infer<typeof signupSchema>) => {
     mutate(values, {
-      onSuccess: () => {
-        // queryClient.invalidateQueries({
-        //   queryKey: ["currentUser"],
-        // });
-        toast({
-          title: "Inscription réussie",
-          description: "",
-          variant: "success",
-        });
+      onSuccess: (data) => {
         form.reset();
         onClose();
+        // Open the non-dismissible OTP overlay
+        showOtp(data.userId, data.email);
       },
       onError: () => {
-        toast({
-          title: "Une erreur s'est produite",
-          description: "L'inscription a échoué. Veuillez réessayer.",
-          variant: "destructive",
+        form.setError("root", {
+          message: "L'inscription a échoué. Veuillez réessayer.",
         });
       },
     });
@@ -74,16 +62,14 @@ const RegisterDialog = () => {
 
   const handleLoginOpen = () => {
     onClose();
-    onOpen();
+    onLoginOpen();
   };
-
-  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] p-8 bg-white border border-gray-200 shadow-2xl">
         <DialogHeader>
-          <DialogTitle className="">Créer un compte</DialogTitle>
+          <DialogTitle>Créer un compte</DialogTitle>
           <DialogDescription>
             Inscrivez-vous en remplissant ce formulaire
           </DialogDescription>
@@ -95,11 +81,11 @@ const RegisterDialog = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="">Nom</FormLabel>
+                  <FormLabel>Nom</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="John Smith"
-                      className="!h-10  placeholder:text-gray-400"
+                      className="!h-10 placeholder:text-gray-400"
                       {...field}
                     />
                   </FormControl>
@@ -113,12 +99,12 @@ const RegisterDialog = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="">Email</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="mail@example.com"
                       type="email"
-                      className="!h-10  placeholder:text-gray-400"
+                      className="!h-10 placeholder:text-gray-400"
                       {...field}
                     />
                   </FormControl>
@@ -132,7 +118,7 @@ const RegisterDialog = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="">Mot de passe</FormLabel>
+                  <FormLabel>Mot de passe</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -143,7 +129,7 @@ const RegisterDialog = () => {
                       />
                       <button
                         type="button"
-                        onClick={() => setShowPassword((prev) => !prev)}
+                        onClick={() => setShowPassword((p) => !p)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                       >
                         {showPassword ? (
@@ -159,20 +145,26 @@ const RegisterDialog = () => {
               )}
             />
 
+            {form.formState.errors.root && (
+              <p className="text-sm text-destructive">
+                {form.formState.errors.root.message}
+              </p>
+            )}
+
             <Button
               size="lg"
               disabled={isPending}
-              className="w-full bg-primary hover:bg-primary/80  font-semibold"
+              className="w-full bg-primary hover:bg-primary/80 font-semibold"
               type="submit"
             >
-              {isPending && <Loader className="w-4 h-4 animate-spin" />}
+              {isPending && <Loader className="w-4 h-4 animate-spin mr-2" />}
               S'inscrire
             </Button>
           </form>
         </Form>
         <div className="mt-2 flex items-center justify-center">
           <p className="text-sm text-muted-foreground">
-            Already have an account?{" "}
+            Vous avez déjà un compte ?{" "}
             <button
               className="text-primary font-semibold hover:text-primary/80 transition-colors"
               onClick={handleLoginOpen}

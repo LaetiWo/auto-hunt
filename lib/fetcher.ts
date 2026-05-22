@@ -6,11 +6,29 @@ import {
 } from "@/@types/api.type";
 import axios from "axios";
 
-export const registerMutationFn = async (data: RegisterType) =>
-  await axios.post("/api/register", data);
+export const registerMutationFn = async (data: RegisterType) => {
+  const response = await axios.post("/api/register", data);
+  return response.data as { userId: string; email: string; message: string };
+};
 
 export const loginMutationFn = async (data: LoginType) =>
   await axios.post("/api/login", data);
+
+export const verifyOtpMutationFn = async (data: {
+  userId: string;
+  otp: string;
+}) => {
+  const response = await axios.post("/api/verify-otp", data);
+  return response.data;
+};
+
+export const sendOtpMutationFn = async (data: {
+  userId: string;
+  email: string;
+}) => {
+  const response = await axios.post("/api/send-otp", data);
+  return response.data;
+};
 
 export const logoutMutationFn = async () => await axios.post("/api/logout");
 

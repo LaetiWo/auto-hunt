@@ -8,8 +8,8 @@ import ForgotPasswordDialog from "@/components/auth/ForgotPasswordDialog";
 import QueryProvider from "@/context/query-provider";
 import NextTopLoader from "nextjs-toploader";
 import { Suspense } from "react";
-import { ThemeProvider } from "@/components/theme-provider";
 import NotificationSidebar from "@/components/NotificationSidebar";
+import OtpVerificationOverlay from "@/components/OtpVerificationOverlay";
 
 export const metadata: Metadata = {
   title: "Auto Hunt",
@@ -24,28 +24,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body className={` bg-card antialiased`}>
         <NextTopLoader color="#0000ff" />
         <QueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Suspense fallback={null}>
-              <NuqsAdapter>
-                <Suspense fallback={null}>
-                  <RegisterDialog />
-                  <LoginDialog />
-                  <ForgotPasswordDialog />
-                  <NotificationSidebar />
-                </Suspense>
-                <Suspense fallback={null}>{children}</Suspense>
-              </NuqsAdapter>
-            </Suspense>
-          </ThemeProvider>
+          <Suspense fallback={null}>
+            <NuqsAdapter>
+              <Suspense fallback={null}>
+                <RegisterDialog />
+                <LoginDialog />
+                <ForgotPasswordDialog />
+                <NotificationSidebar />
+                <OtpVerificationOverlay />
+              </Suspense>
+              <Suspense fallback={null}>{children}</Suspense>
+            </NuqsAdapter>
+          </Suspense>
           <Toaster />
         </QueryProvider>
       </body>
