@@ -35,15 +35,6 @@ import { toast } from "@/hooks/use-toast";
 
 import { use } from "react";
 
-// const EditListing = ({ params }: { params: { vehicleId: string } }) => {
-//   const router = useRouter();
-//   const { vehicleId } = params;
-
-//   const { data, isPending: isLoading } = useQuery({
-//     queryKey: ["listing", vehicleId],
-//     queryFn: () => getSingleListingQueryFn(vehicleId),
-//   });
-
 const EditListing = ({ params }: { params: { vehicleId: string } }) => {
   const router = useRouter();
   const { vehicleId } = params;
