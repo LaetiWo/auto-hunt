@@ -4,7 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMyShopQueryFn } from "@/lib/fetcher";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CarCard from "@/components/CarCard";
-import ShopInfo from "@/components/shop/shop-info";
 import EmptyState from "@/components/EmptyState";
 import { Car, ShoppingBag, Bell } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -16,8 +15,6 @@ const MyShop = () => {
     queryFn: getMyShopQueryFn,
   });
 
-  const user = shopData?.user;
-  const shop = shopData?.shop;
   const listings = shopData?.listings || [];
 
   const salesListings = listings.filter((l: any) => l.type === "sale");
@@ -25,74 +22,51 @@ const MyShop = () => {
   return (
     <main className="container mx-auto px-4 pt-3 pb-8">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[305px_1fr] gap-5">
-          <div className="pt-1">
-            <ShopInfo
-              description={shop?.description}
-              isShopOwner={true}
-              ownerName={user?.name}
-              ownerEmail={user?.email}
-              ownerPhone={user?.phone}
-              shopOwnerUserId={user?.$id}
-              ownerAvatarUrl={user?.prefs?.avatarUrl}
-              isPending={isPending}
-            />
-          </div>
+        <div className="pt-1">
+          <Tabs defaultValue="sales">
+            <TabsList className="w-full mb-4">
+              <TabsTrigger value="sales" className="flex-1 gap-2">
+                <ShoppingBag className="w-4 h-4" />
+                Mes ventes ({salesListings.length})
+              </TabsTrigger>
+              <TabsTrigger value="rentals" className="flex-1 gap-2">
+                <Car className="w-4 h-4" />
+                Mes locations ({rentalListings.length})
+              </TabsTrigger>
+              <TabsTrigger value="requests" className="flex-1 gap-2">
+                <Bell className="w-4 h-4" />
+                Demandes reçues
+              </TabsTrigger>
+            </TabsList>
 
-          <div className="pt-1">
-            <Tabs defaultValue="sales">
-              <TabsList className="w-full mb-4">
-                <TabsTrigger value="sales" className="flex-1 gap-2">
-                  <ShoppingBag className="w-4 h-4" />
-                  Mes ventes ({salesListings.length})
-                </TabsTrigger>
-                <TabsTrigger value="rentals" className="flex-1 gap-2">
-                  <Car className="w-4 h-4" />
-                  Mes locations ({rentalListings.length})
-                </TabsTrigger>
-                <TabsTrigger value="requests" className="flex-1 gap-2">
-                  <Bell className="w-4 h-4" />
-                  Demandes reçues
-                </TabsTrigger>
-              </TabsList>
+            <TabsContent value="sales">
+              {salesListings.length === 0 ? (
+                <EmptyState message="Aucune voiture en vente." />
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {salesListings.map((listing: any) => (
+                    <CarCard key={listing.$id} listing={listing} layout="grid" />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
 
-              <TabsContent value="sales">
-                {salesListings.length === 0 ? (
-                  <EmptyState message="Aucune voiture en vente." />
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {salesListings.map((listing: any) => (
-                      <CarCard
-                        key={listing.$id}
-                        listing={listing}
-                        layout="grid"
-                      />
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
+            <TabsContent value="rentals">
+              {rentalListings.length === 0 ? (
+                <EmptyState message="No cars for rent." />
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {rentalListings.map((listing: any) => (
+                    <CarCard key={listing.$id} listing={listing} layout="grid" />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
 
-              <TabsContent value="rentals">
-                {rentalListings.length === 0 ? (
-                  <EmptyState message="No cars for rent." />
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {rentalListings.map((listing: any) => (
-                      <CarCard
-                        key={listing.$id}
-                        listing={listing}
-                        layout="grid"
-                      />
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-
-              <TabsContent value="requests">
-                <PurchaseRequestsReceived />
-              </TabsContent>
-            </Tabs>
-          </div>
+            <TabsContent value="requests">
+              <PurchaseRequestsReceived />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </main>

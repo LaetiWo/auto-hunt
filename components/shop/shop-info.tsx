@@ -84,63 +84,55 @@ const ShopInfo = ({
           </div>
           <p className="text-sm text-black font-light">{description}</p>
 
-          <div className="mt-4 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100/60 p-1.5 space-y-0.5">
-            <div className="flex items-center gap-3 rounded-xl p-2.5">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <User className="h-4 w-4" />
+          {!isShopOwner && (
+            <div className="mt-4 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100/60 p-1.5 space-y-0.5">
+              <div className="flex items-center gap-3 rounded-xl p-2.5">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <User className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
+                    Nom
+                  </p>
+                  <p className="truncate text-sm font-medium text-gray-800">
+                    {ownerName || "Non renseigné"}
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
-                  Nom
-                </p>
-                <p className="truncate text-sm font-medium text-gray-800">
-                  {ownerName || "Non renseigné"}
-                </p>
+
+              <div className="mx-2.5 h-px bg-gray-200/70" />
+
+              <div className="flex items-center gap-3 rounded-xl p-2.5">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Mail className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
+                    Email
+                  </p>
+                  <p className="truncate text-sm font-medium text-gray-800">
+                    {ownerEmail || "Non renseigné"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mx-2.5 h-px bg-gray-200/70" />
+
+              <div className="flex items-center gap-3 rounded-xl p-2.5">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Phone className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
+                    Téléphone
+                  </p>
+                  <p className="truncate text-sm font-medium text-gray-800">
+                    {ownerPhone || "Non renseigné"}
+                  </p>
+                </div>
               </div>
             </div>
-
-            <div className="mx-2.5 h-px bg-gray-200/70" />
-
-            <div className="flex items-center gap-3 rounded-xl p-2.5">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <Mail className="h-4 w-4" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
-                  Email
-                </p>
-                <p className="truncate text-sm font-medium text-gray-800">
-                  {ownerEmail || "Non renseigné"}
-                </p>
-              </div>
-            </div>
-
-            <div className="mx-2.5 h-px bg-gray-200/70" />
-
-            <div className="flex items-center gap-3 rounded-xl p-2.5">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <Phone className="h-4 w-4" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400">
-                  Téléphone
-                </p>
-                <p className="truncate text-sm font-medium text-gray-800">
-                  {ownerPhone || "Non renseigné"}
-                </p>
-              </div>
-              {!ownerPhone && isShopOwner && (
-                <button
-                  type="button"
-                  onClick={() => router.push("/my-shop/edit-profile")}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-dashed border-primary/40 text-primary/60 transition-colors hover:border-primary hover:text-primary"
-                  aria-label="Ajouter un numéro de téléphone"
-                >
-                  <UserPlus className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-          </div>
+          )}
         </div>
       </Card>
     </div>

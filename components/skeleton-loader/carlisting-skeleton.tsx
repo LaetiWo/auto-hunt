@@ -19,12 +19,11 @@ const CarListingSkeleton = ({
         }`
       }
     >
-      {Array.from({ length: 5 }).map((_, index) => (
+      {Array.from({ length: 3 }).map((_, index) => (
         <div key={index} className="w-full">
           <Skeleton className="w-full h-48" />
           <div className="flex flex-col gap-2 mt-2">
             <Skeleton className="w-10/12 h-3" />
-            <Skeleton className="w-1/2 h-48" />
           </div>
         </div>
       ))}

@@ -11,24 +11,13 @@ type FilterKeys =
   | "brand"
   | "model"
   | "fuelType"
+  | "transmission"
   | "year_min"
   | "year_max"
   | "price"
   | "condition"
   | "color"
   | "keyword";
-
-type FilterTypes = {
-  brand: string[];
-  model: string[];
-  fuelType: string[];
-  year_min: number;
-  year_max: number;
-  price: string;
-  condition: string[];
-  color: string[];
-  keyword: string;
-};
 
 const useFilter = () => {
   const [brand, setBrand] = useQueryState(
@@ -48,6 +37,11 @@ const useFilter = () => {
 
   const [fuelType, setFuelType] = useQueryState(
     "fuelType",
+    parseAsArrayOf(parseAsString).withDefault([])
+  );
+
+  const [transmission, setTransmission] = useQueryState(
+    "transmission",
     parseAsArrayOf(parseAsString).withDefault([])
   );
 
@@ -81,6 +75,7 @@ const useFilter = () => {
     model,
     price,
     fuelType,
+    transmission,
     yearMin,
     yearMax,
     condition,
@@ -104,6 +99,9 @@ const useFilter = () => {
 
       case "fuelType":
         return setFuelType(Array.isArray(values) ? values : null);
+
+      case "transmission":
+        return setTransmission(Array.isArray(values) ? values : null);
 
       case "condition":
         return setCondition(Array.isArray(values) ? values : null);
@@ -135,6 +133,7 @@ const useFilter = () => {
       setModel(null),
       setPrice(null),
       setFuelType(null),
+      setTransmission(null),
       setCondition(null),
       setColor(null),
       setYearMin(null),

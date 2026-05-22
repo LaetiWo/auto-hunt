@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -6,6 +7,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import {
@@ -15,11 +17,10 @@ import {
   CAR_MODEL_OPTIONS,
   CAR_PRICE_RANGE_OPTIONS,
 } from "@/constants/car-options";
-import { SelectTrigger } from "@radix-ui/react-select";
-import { ChevronRight } from "lucide-react";
+import { Search, Car, Fuel, DollarSign, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 
 interface FilterOption {
   label: string;
@@ -31,7 +32,7 @@ interface FilterSelectProps {
   options: FilterOption[];
   placeholder: string;
   onChange: (value: string) => void;
-  className?: string;
+  icon?: React.ReactNode;
 }
 
 const HeroFilter = () => {
@@ -72,81 +73,108 @@ const HeroFilter = () => {
         params.append(key, value);
       }
     });
-    console.log(params);
     router.push(`/search?${params.toString()}`);
   };
 
   return (
-    <div className="w-full flex flex-col gap-6 pt-6">
-      <div className="w-full flex flex-wrap items-center justify-center gap-4">
+    <div className="w-full flex flex-col gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <FilterSelect
-          label="Brand"
+          label="Marque"
           options={filterOptions.brands}
-          placeholder="Marque"
+          placeholder="Sélectionner une marque"
           onChange={(value) => handleFilterChange("brand", value)}
+          icon={<Car className="size-4 text-muted-foreground" />}
         />
 
         <FilterSelect
-          label="Model"
+          label="Modèle"
           options={filterOptions.models}
-          placeholder="Modèle"
+          placeholder="Sélectionner un modèle"
           onChange={(value) => handleFilterChange("model", value)}
+          icon={<Settings2 className="size-4 text-muted-foreground" />}
         />
 
         <FilterSelect
-          label="Condition"
+          label="État"
           options={filterOptions.conditions}
-          placeholder="Condition"
+          placeholder="Neuf ou occasion"
           onChange={(value) => handleFilterChange("condition", value)}
+          icon={<Settings2 className="size-4 text-muted-foreground" />}
         />
 
         <FilterSelect
-          label="Fuel"
+          label="Carburant"
           options={filterOptions.fuelTypes}
-          placeholder="Carburant"
+          placeholder="Type de carburant"
           onChange={(value) => handleFilterChange("fuelType", value)}
+          icon={<Fuel className="size-4 text-muted-foreground" />}
         />
 
         <FilterSelect
-          label="Price"
+          label="Budget"
           options={filterOptions.priceRange}
-          placeholder="Prix"
+          placeholder="Fourchette de prix"
           onChange={(value) => handleFilterChange("price", value)}
+          icon={<DollarSign className="size-4 text-muted-foreground" />}
         />
       </div>
 
-      <Button onClick={handleSearch}>
+      <Button
+        onClick={handleSearch}
+        size="lg"
+        className="w-full h-12 text-base font-semibold gap-2 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
+      >
+        <Search className="size-5" />
         Rechercher
-        <ChevronRight />
       </Button>
 
       <p className="text-muted-foreground text-sm text-center">
-        Vous souhaitez affiner votre recherche?{" "}
-        <Link href="/search" className="text-primary underline font-bold mt-2">
+        Besoin de filtres plus précis ?{" "}
+        <Link
+          href="/search"
+          className="text-primary hover:text-primary/80 underline underline-offset-4 font-medium transition-colors"
+        >
           Recherche avancée
         </Link>
       </p>
     </div>
   );
 };
+
 const FilterSelect: React.FC<FilterSelectProps> = ({
   label,
   options,
   placeholder,
   onChange,
-  className,
+  icon,
 }) => {
   return (
-    <div className={`w-full lg:w-[28%] ${className ? ` ${className}` : ""}`}>
+    <div className="space-y-1.5">
+      <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+        {label}
+      </label>
       <Select onValueChange={onChange}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder={placeholder} />
+        <SelectTrigger className="w-full h-11 bg-secondary/50 border-border/50 hover:bg-secondary hover:border-primary/20 transition-all duration-200">
+          <div className="flex items-center gap-2 overflow-hidden">
+            <span className="shrink-0">{icon}</span>
+            <SelectValue
+              placeholder={placeholder}
+              className="truncate text-left"
+            />
+          </div>
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>{label}</SelectLabel>
+            <SelectLabel className="text-xs uppercase tracking-wide text-muted-foreground">
+              {label}
+            </SelectLabel>
             {options?.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem
+                key={option.value}
+                value={option.value}
+                className="cursor-pointer"
+              >
                 {option.label}
               </SelectItem>
             ))}

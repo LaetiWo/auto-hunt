@@ -57,26 +57,26 @@ const SearchContent = () => {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 w-full">
       <NavBreadCrumb breadcrumbItems={breadcrumbItems} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-4  gap-6 m">
+      <div className="lg:flex items-start gap-8 w-full">
         <div className="lg:hidden">
           <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
             <SheetContent
               side="left"
-              className="w-[300px] !p-0 sm:w-[400px] overflow-y-auto"
+              className="w-[350px] !p-0 sm:w-[400px] overflow-y-auto"
             >
               <Filters />
             </SheetContent>
           </Sheet>
         </div>
 
-        <div className="hidden lg:block col-span-1">
+        <div className="hidden lg:block w-[300px] shrink-0">
           <Filters />
         </div>
 
-        <div className="col-span-1 lg:col-span-3">
+        <div className="flex-1 min-w-0">
           <AllListings
             listings={listings}
             isPending={isPending}

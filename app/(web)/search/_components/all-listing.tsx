@@ -5,6 +5,7 @@ import CarCard from "@/components/CarCard";
 import EmptyState from "@/components/EmptyState";
 import CarListingSkeleton from "@/components/skeleton-loader/carlisting-skeleton";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { CarFrontIcon, FilterIcon, Grid3X3, List } from "lucide-react";
 import React from "react";
 
@@ -63,11 +64,12 @@ const AllListings = ({
         <EmptyState message="Aucune voiture trouvée" icon={CarFrontIcon} />
       ) : (
         <div
-          className={`w-full grid ${
+          className={cn(
+            "w-full grid gap-6",
             layout === "list"
-              ? "grid-cols-1 gap-4"
-              : "grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          }`}
+              ? "grid-cols-1"
+              : "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4",
+          )}
         >
           {listings?.map((listing) => (
             <CarCard key={listing.$id} listing={listing} layout={layout} />

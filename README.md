@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚗 Auto-Hunt
 
-## Getting Started
+Auto-Hunt est une plateforme moderne de vente et de location de voitures. Elle permet aux utilisateurs de parcourir des annonces, de gérer leur boutique et de louer des véhicules via une interface fluide et intuitive.
 
-First, run the development server:
+## 🌟 Fonctionnalités
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Recherche Avancée** : Filtres par marque, modèle et prix.
+- **Gestion de Boutique** : Créez et gérez votre propre catalogue de voitures.
+- **Location & Vente** : Support complet pour les deux types de transactions.
+- **Notifications** : Alertes en temps réel pour les activités importantes.
+- **Design Premium** : Interface responsive avec mode sombre et animations fluides.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Stack Technique
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework** : [Next.js 14+](https://nextjs.org/) (App Router)
+- **Langage** : [TypeScript](https://www.typescriptlang.org/)
+- **Backend-as-a-Service** : [Appwrite](https://appwrite.io/) (Database, Auth, Storage)
+- **Styling** : [Tailwind CSS](https://tailwindcss.com/) & [Shadcn/UI](https://ui.shadcn.com/)
+- **Emails** : [Resend](https://resend.com/)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Mise en route
 
-## Learn More
+### Prérequis
 
-To learn more about Next.js, take a look at the following resources:
+- Node.js 18+ installé.
+- Un compte [Appwrite](https://appwrite.io/) (Cloud ou Self-hosted).
+- Une clé API [Resend](https://resend.com/) pour les emails.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Cloner le repository**
+   ```bash
+   git clone https://github.com/LaetiWo/auto-hunt.git
+   cd auto-hunt
+   ```
 
-## Deploy on Vercel
+2. **Installer les dépendances**
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Configuration de l'environnement**
+   Copiez le fichier `.env.example` vers un nouveau fichier `.env` :
+   ```bash
+   cp .env.example .env
+   ```
+   Remplissez ensuite les variables dans le fichier `.env` avec vos propres clés Appwrite et Resend.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. **Lancer le serveur de développement**
+   ```bash
+   npm run dev
+   ```
+   Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
+
+## 🔑 Variables d'Environnement
+
+Le projet utilise plusieurs variables clés regroupées en trois sections :
+- **Application** : URL de base et options de debug.
+- **Appwrite (Public)** : Identifiants nécessaires pour le frontend.
+- **Appwrite (Private)** : Clés API secrètes pour les opérations serveur.
+- **Resend** : Clés pour l'envoi d'emails.
+
+*Référez-vous au fichier `.env.example` pour la liste complète.*
+
+## 📁 Structure du Projet
+
+- `/app` : Routes et pages de l'application (Next.js App Router).
+- `/components` : Composants UI réutilisables.
+- `/lib` : Fonctions utilitaires et configuration des SDK (Appwrite).
+- `/public` : Assets statiques (images, logos).
+
+---
+
+Développé avec ❤️ par l'équipe Auto-Hunt.

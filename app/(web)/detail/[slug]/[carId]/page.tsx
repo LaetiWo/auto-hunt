@@ -50,7 +50,7 @@ const CarDetail = ({
             isPending={isPending || isError}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_340px]">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_340px] gap-2">
             <div className="pt-1">
               <CarCarousel
                 imageUrls={listing?.imageUrls}

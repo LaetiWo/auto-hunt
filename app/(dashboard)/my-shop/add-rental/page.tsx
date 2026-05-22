@@ -168,127 +168,129 @@ const AddRental = () => {
   }
 
   return (
-    <main className="container mx-auto px-4 pt-3 pb-8">
-      <div className="max-w-4xl mx-auto pt-5">
-        <Card className="!bg-transparent shadow-none border-none">
-          <CardHeader className="flex items-center justify-center bg-white rounded-[8px] p-4 mb-4">
-            <CardTitle className="font-semibold text-xl">
-              Ajouter un véhicule à louer
-            </CardTitle>
-          </CardHeader>
+    <main className="min-h-screen bg-gradient-to-br from-background to-background/80 px-4 py-8">
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Ajouter un véhicule à louer
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Remplissez les détails de votre véhicule à mettre en location
+          </p>
+        </div>
 
-          <CardContent className="bg-white rounded-[8px] p-4 px-6 pb-8">
-            <div className="w-full mx-auto">
-              <div className="flex items-center">
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="w-full"
-                  >
-                    <div className="space-y-2 pt-3">
-                      <h2 className="text-sm font-medium ">
-                        Ajouter des photos
-                      </h2>
-                      <div className="text-sm ">
-                        <div>Ajoutez au moins 3 photos du véhicule</div>
-                        La première image sera la photo de couverture.
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-start mt-2">
-                      <FileUploader onFileUrlsReceived={handleImageUrls}>
-                        <ScrollArea className="w-96 whitespace-nowrap ml-3">
-                          <div className="w-full flex max-w space-x-4 items-center h-20">
-                            {imageUrls?.map(
-                              (imageUrl: string, index: number) => (
-                                <div
-                                  key={`id-${index}`}
-                                  className="relative overflow-hidden w-20 h-20 rounded-[8px]"
-                                >
-                                  <img
-                                    src={imageUrl}
-                                    alt=""
-                                    width={80}
-                                    height={80}
-                                    className="w-full h-full rounded-[8px] object-cover"
-                                  />
-                                  <button
-                                    onClick={() => handleRemoveImage(index)}
-                                    className="absolute top-0 right-0 p-1 bg-black rounded-full"
-                                  >
-                                    <X className="w-4 h-4 bg-primary hover:bg-primary/80 " />
-                                  </button>
-                                </div>
-                              ),
-                            )}
+        <Card className="border border-border/50 shadow-sm">
+          <CardContent className="p-8">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8"
+              >
+                {/* Images Section */}
+                <div>
+                  <div className="mb-4">
+                    <h2 className="text-lg font-semibold text-foreground mb-1">
+                      Photos du véhicule
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Ajoutez au moins 3 photos. La première sera la couverture.
+                    </p>
+                  </div>
+                  <FileUploader onFileUrlsReceived={handleImageUrls}>
+                    <ScrollArea className="w-full">
+                      <div className="flex gap-3 pb-3">
+                        {imageUrls?.map((imageUrl: string, index: number) => (
+                          <div
+                            key={`id-${index}`}
+                            className="relative overflow-hidden w-24 h-24 flex-shrink-0 rounded-lg border border-border/50 bg-muted/30"
+                          >
+                            <img
+                              src={imageUrl}
+                              alt="preview"
+                              className="w-full h-full object-cover"
+                            />
+                            <button
+                              onClick={() => handleRemoveImage(index)}
+                              className="absolute -top-2 -right-2 p-1.5 bg-destructive hover:bg-destructive/90 rounded-full transition-colors shadow-sm"
+                            >
+                              <X className="w-3.5 h-3.5 text-white" />
+                            </button>
                           </div>
-                          <ScrollBar orientation="horizontal" />
-                        </ScrollArea>
-                      </FileUploader>
-                    </div>
+                        ))}
+                      </div>
+                      <ScrollBar orientation="horizontal" />
+                    </ScrollArea>
+                  </FileUploader>
+                </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-5">
-                      {addRentalFields.map((field, index) => (
-                        <FormField
-                          key={index}
-                          control={form.control}
-                          name={field.name as FormFieldName}
-                          disabled={field.disabled || isPending}
-                          render={({ field: formField }) => {
-                            const filteredModels =
-                              field.name === "model" && brand
-                                ? field?.options?.filter(
-                                    (model) => model.key === brand,
-                                  )
-                                : [];
-                            const valueMultiSelect =
-                              field.fieldType === "multiselect"
-                                ? Array.isArray(formField.value)
-                                  ? formField.value
-                                  : []
-                                : [];
-                            return (
-                              <FormItem
-                                className={`${
-                                  field.col ? `col-span-${field.col}` : ""
-                                }`}
-                              >
-                                <FormControl>
-                                  <FormGenerator
-                                    field={{
-                                      ...field,
-                                      options:
-                                        field.name === "model"
-                                          ? filteredModels
-                                          : field.options,
-                                    }}
-                                    register={form.register}
-                                    errors={form.formState.errors}
-                                    formValue={formField.value}
-                                    valueMultiSelect={valueMultiSelect}
-                                    onChange={formField.onChange}
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            );
-                          }}
-                        />
-                      ))}
-                    </div>
+                {/* Form Fields */}
+                <div>
+                  <h2 className="text-lg font-semibold text-foreground mb-4">
+                    Informations du véhicule
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {addRentalFields.map((field, index) => (
+                      <FormField
+                        key={index}
+                        control={form.control}
+                        name={field.name as FormFieldName}
+                        disabled={field.disabled || isPending}
+                        render={({ field: formField }) => {
+                          const filteredModels =
+                            field.name === "model" && brand
+                              ? field?.options?.filter(
+                                  (model) => model.key === brand,
+                                )
+                              : [];
+                          const valueMultiSelect =
+                            field.fieldType === "multiselect"
+                              ? Array.isArray(formField.value)
+                                ? formField.value
+                                : []
+                              : [];
+                          return (
+                            <FormItem>
+                              <FormControl>
+                                <FormGenerator
+                                  field={{
+                                    ...field,
+                                    options:
+                                      field.name === "model"
+                                        ? filteredModels
+                                        : field.options,
+                                  }}
+                                  register={form.register}
+                                  errors={form.formState.errors}
+                                  formValue={formField.value}
+                                  valueMultiSelect={valueMultiSelect}
+                                  onChange={formField.onChange}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
 
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className="mt-6 py-6 mb-4 w-full max-w-xs flex place-items-center bg-primary
-                       hover:bg-primary/80  font-semibold justify-self-center"
-                      disabled={isPending}
-                    >
-                      {isPending && <Loader className="w-4 h-4 animate-spin" />}
-                      Publier la location
-                    </Button>
-                  </form>
-                </Form>
-              </div>
-            </div>
+                {/* Submit Button */}
+                <div className="flex justify-center pt-6">
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="px-8 h-11 font-semibold rounded-lg shadow-sm hover:shadow-md transition-all"
+                    disabled={isPending}
+                  >
+                    {isPending && (
+                      <Loader className="w-4 h-4 animate-spin mr-2" />
+                    )}
+                    {isPending ? "Publication..." : "Publier la location"}
+                  </Button>
+                </div>
+              </form>
+            </Form>
           </CardContent>
         </Card>
       </div>

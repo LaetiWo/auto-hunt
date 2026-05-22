@@ -152,6 +152,45 @@ export const CAR_MODEL_OPTIONS = [
   { key: "chevrolet", value: "suburban", label: "Suburban" },
   { key: "chevrolet", value: "equinox", label: "Equinox" },
   { key: "chevrolet", value: "malibu", label: "Malibu" },
+
+  // Peugeot
+  { key: "peugeot", value: "208", label: "208" },
+  { key: "peugeot", value: "308", label: "308" },
+  { key: "peugeot", value: "508", label: "508" },
+  { key: "peugeot", value: "2008", label: "2008" },
+  { key: "peugeot", value: "3008", label: "3008" },
+  { key: "peugeot", value: "5008", label: "5008" },
+
+  // Renault
+  { key: "renault", value: "clio", label: "Clio" },
+  { key: "renault", value: "megane", label: "Mégane" },
+  { key: "renault", value: "captur", label: "Captur" },
+  { key: "renault", value: "kadjar", label: "Kadjar" },
+  { key: "renault", value: "talisman", label: "Talisman" },
+
+  // Citroën
+  { key: "citroen", value: "c3", label: "C3" },
+  { key: "citroen", value: "c4", label: "C4" },
+  { key: "citroen", value: "c5", label: "C5" },
+  { key: "citroen", value: "berlingo", label: "Berlingo" },
+
+  // Mitsubishi
+  { key: "mitsubishi", value: "lancer", label: "Lancer" },
+  { key: "mitsubishi", value: "outlander", label: "Outlander" },
+  { key: "mitsubishi", value: "pajero", label: "Pajero" },
+  { key: "mitsubishi", value: "triton", label: "Triton" },
+
+  // Suzuki
+  { key: "suzuki", value: "swift", label: "Swift" },
+  { key: "suzuki", value: "vitara", label: "Vitara" },
+  { key: "suzuki", value: "jimny", label: "Jimny" },
+  { key: "suzuki", value: "baleno", label: "Baleno" },
+
+  // Mazda
+  { key: "mazda", value: "mazda3", label: "Mazda 3" },
+  { key: "mazda", value: "mazda6", label: "Mazda 6" },
+  { key: "mazda", value: "cx-5", label: "CX-5" },
+  { key: "mazda", value: "mx-5", label: "MX-5" },
 ];
 
 export const CAR_BODY_TYPE_OPTIONS = [

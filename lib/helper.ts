@@ -65,3 +65,10 @@ export const formatPriceRange = (
     currency,
   )}`;
 };
+
+export const formatMileage = (mileage: string | number | undefined): string => {
+  if (mileage === undefined || mileage === null) return "0";
+  const value = typeof mileage === "string" ? parseInt(mileage, 10) : mileage;
+  if (isNaN(value)) return "0";
+  return new Intl.NumberFormat("fr-FR").format(value);
+};
