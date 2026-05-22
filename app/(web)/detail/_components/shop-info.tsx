@@ -39,7 +39,6 @@ const ShopInfo = ({
   const currentUserId = data?.user?.$id;
   const isOwner = currentUserId === shopOwnerUserId;
 
-  // 👇 Ajoute ici
   const { data: sellerData } = useQuery({
     queryKey: ["seller", shopOwnerUserId],
     queryFn: () =>

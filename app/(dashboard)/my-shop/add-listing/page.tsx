@@ -46,7 +46,7 @@ const AddListing = () => {
       .string({
         required_error: "Contact number is required",
       })
-      .refine(isValidPhoneNumber, "Invalid phone number"),
+      .refine(isValidPhoneNumber, "Numéro de téléphone invalide"),
   });
 
   type FormDataType = z.infer<typeof listingClientSchema>;
