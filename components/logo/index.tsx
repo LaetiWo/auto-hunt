@@ -12,9 +12,9 @@ const Logo = () => {
         <span className="font-extrabold text-xl tracking-tighter text-foreground">
           AUTO<span className="text-primary">HUNT</span>
         </span>
-        <span className="text-[10px] font-medium text-muted-foreground tracking-widest uppercase pl-0.5">
+        {/* <span className="text-[10px] font-medium text-muted-foreground tracking-widest uppercase pl-0.5">
           Premium Market
-        </span>
+        </span> */}
       </div>
     </Link>
   );
