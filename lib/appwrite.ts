@@ -63,11 +63,7 @@ export async function getLoggedInUser() {
   try {
     const { account } = await createSessionClient();
     const user = await account.get();
-
-    if (!user.emailVerification) {
-      return null;
-    }
-
+    if (!user.emailVerification) return null;
     return user;
   } catch (error) {
     return null;

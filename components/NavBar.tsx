@@ -1,23 +1,21 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
-import Logo from "./logo";
-import {
-  Loader,
-  Menu,
-  User,
-  Settings,
-  LogOut,
-  Sun,
-  Moon,
-  Bell,
-} from "lucide-react";
-import { Button } from "./ui/button";
-import useRegisterDialog from "@/hooks/use-register-dialog";
-import useLoginDialog from "@/hooks/use-login-dialog";
-import useCurrentUser from "@/hooks/api/use-current-user";
+import { Bell, Loader, LogOut, Menu, Settings, User } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTheme } from "next-themes";
+import React, { useCallback, useEffect } from "react";
+
+import useCurrentUser from "@/hooks/api/use-current-user";
+import useLoginDialog from "@/hooks/use-login-dialog";
 import useNotificationSidebar from "@/hooks/use-notification-sidebar";
+import useRegisterDialog from "@/hooks/use-register-dialog";
+import { toast } from "@/hooks/use-toast";
+import { logoutMutationFn } from "@/lib/fetcher";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import Logo from "./logo";
+import Sidebar from "./Sidebar";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,13 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "./ui/avatar";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { logoutMutationFn } from "@/lib/fetcher";
-import { toast } from "@/hooks/use-toast";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import Sidebar from "./Sidebar";
-import Link from "next/link";
 
 const NavBar = () => {
   const router = useRouter();
@@ -42,13 +34,6 @@ const NavBar = () => {
 
   const { data: userData, isPending: isLoading } = useCurrentUser();
   const user = userData?.user;
-
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const loginRequired = searchParams.get("login-required");
 
@@ -63,10 +48,8 @@ const NavBar = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: logoutMutationFn,
     onSuccess: () => {
-      queryClient.setQueryData(["currentUser"], null);
-      queryClient.invalidateQueries({
-        queryKey: ["currentUser"],
-      });
+      // Set data immediately so buttons reappear without waiting for a refetch
+      queryClient.setQueryData(["currentUser"], { user: null, shop: null });
       toast({
         title: "Déconnexion réussie",
         description: "Vous avez été déconnecté avec succès",
@@ -88,7 +71,7 @@ const NavBar = () => {
   }, [mutate]);
 
   return (
-    <header className="w-full sticky top-0 z-30 h-16 bg-background/95 backdrop-blur-sm border-b border-border/50 px-4 md:px-6 shadow-sm">
+    <header className="w-full sticky top-0 z-30 h-[91px] bg-background/95 backdrop-blur-sm border-b border-border/50 px-4 md:px-6 shadow-sm">
       <div className="flex items-center justify-between h-full w-full">
         {/* Mobile Sidebar Trigger */}
         <div className="lg:hidden">
@@ -121,19 +104,17 @@ const NavBar = () => {
           {isLoading || isPending ? (
             <Loader className="w-5 h-5 animate-spin text-muted-foreground" />
           ) : !user ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
-                size="sm"
                 onClick={onLoginOpen}
-                className="text-sm font-medium hover:bg-accent/50 transition-colors"
+                className="text-base font-medium px-5 hover:bg-accent/50 transition-colors"
               >
                 Connexion
               </Button>
               <Button
-                size="sm"
                 onClick={onRegisterOpen}
-                className="text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground transition-colors"
+                className="text-base font-medium px-5 bg-primary hover:bg-primary/90 text-primary-foreground transition-colors"
               >
                 Inscription
               </Button>
@@ -188,26 +169,6 @@ const NavBar = () => {
                       <span className="text-sm">Paramètres du profil</span>
                     </Link>
                   </DropdownMenuItem>
-
-                  {/* <DropdownMenuItem
-                    className="cursor-pointer gap-3 py-2"
-                    onClick={() =>
-                      setTheme(theme === "dark" ? "light" : "dark")
-                    }
-                  >
-                    {mounted && (
-                      <>
-                        {theme === "dark" ? (
-                          <Sun className="h-4 w-4" />
-                        ) : (
-                          <Moon className="h-4 w-4" />
-                        )}
-                      </>
-                    )}
-                    <span className="text-sm flex-1">
-                      {theme === "dark" ? "Mode clair" : "Mode sombre"}
-                    </span>
-                  </DropdownMenuItem> */}
 
                   <DropdownMenuSeparator />
 

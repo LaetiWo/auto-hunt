@@ -91,7 +91,7 @@ const Sidebar = () => {
 
   return (
     <aside className="hidden lg:flex flex-col w-64 h-screen sticky top-0 left-0 bg-background border-r border-border/50 shrink-0 z-20">
-      <div className="h-16 flex items-center px-6 border-b border-border/30">
+      <div className="p-6 border-b border-border/30">
         <Logo />
       </div>
 

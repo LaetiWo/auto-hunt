@@ -1,10 +1,21 @@
 "use client";
 
-import React from "react";
+import { Eye, EyeOff, Loader } from "lucide-react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import useForgotPasswordDialog from "@/hooks/use-forgot-password-dialog";
+import useLoginDialog from "@/hooks/use-login-dialog";
+import useOtpVerification from "@/hooks/use-otp-verification";
+import useRegisterDialog from "@/hooks/use-register-dialog";
+import { toast } from "@/hooks/use-toast";
+import { loginMutationFn } from "@/lib/fetcher";
 import { loginSchema } from "@/validation/auth.validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -21,21 +32,15 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import useLoginDialog from "@/hooks/use-login-dialog";
-import useRegisterDialog from "@/hooks/use-register-dialog";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { loginMutationFn } from "@/lib/fetcher";
-import { toast } from "@/hooks/use-toast";
-import { Loader, Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
-import useForgotPasswordDialog from "@/hooks/use-forgot-password-dialog";
 
 const LoginDialog = () => {
   const { open, onClose } = useLoginDialog();
-  const { onOpen } = useRegisterDialog();
+  const { onOpen: onRegisterOpen } = useRegisterDialog();
+  const { onOpen: onForgotPasswordOpen } = useForgotPasswordDialog();
+  const { show: showOtp } = useOtpVerification();
 
   const queryClient = useQueryClient();
+  const [showPassword, setShowPassword] = useState(false);
 
   const { mutate, isPending } = useMutation({
     mutationFn: loginMutationFn,
@@ -43,17 +48,15 @@ const LoginDialog = () => {
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
     mutate(values, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["currentUser"],
+      onSuccess: (response: any) => {
+        // Set query data immediately — no refetch needed
+        queryClient.setQueryData(["currentUser"], {
+          user: response.data.user,
         });
         toast({
           title: "Connexion réussie",
@@ -62,28 +65,33 @@ const LoginDialog = () => {
         });
         onClose();
       },
-      onError: () => {
-        toast({
-          title: "Échec de la connexion",
-          description: "La connexion a échoué, veuillez réessayer",
-          variant: "destructive",
-        });
+      onError: (error: any) => {
+        const data = error?.response?.data;
+        if (data?.error === "email_not_verified") {
+          onClose();
+          // Open the non-dismissible OTP overlay
+          showOtp(data.userId, data.email);
+        } else {
+          toast({
+            title: "Échec de la connexion",
+            description: "Email ou mot de passe incorrect",
+            variant: "destructive",
+          });
+        }
       },
     });
   };
+
   const handleRegisterOpen = () => {
     onClose();
-    onOpen();
+    onRegisterOpen();
   };
-
-  const [showPassword, setShowPassword] = useState(false);
-
-  const { onOpen: onForgotPasswordOpen } = useForgotPasswordDialog();
 
   const handleForgotPasswordOpen = () => {
     onClose();
     onForgotPasswordOpen();
   };
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] p-8">
@@ -101,12 +109,12 @@ const LoginDialog = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="">Email</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="email@example.com"
                       type="email"
-                      className="!h-10  placeholder:text-gray-400"
+                      className="!h-10 placeholder:text-gray-400"
                       {...field}
                     />
                   </FormControl>
@@ -120,7 +128,7 @@ const LoginDialog = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="">Mot de passe</FormLabel>
+                  <FormLabel>Mot de passe</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -131,7 +139,7 @@ const LoginDialog = () => {
                       />
                       <button
                         type="button"
-                        onClick={() => setShowPassword((prev) => !prev)}
+                        onClick={() => setShowPassword((p) => !p)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                       >
                         {showPassword ? (
@@ -150,18 +158,18 @@ const LoginDialog = () => {
             <Button
               size="lg"
               disabled={isPending}
-              className="w-full bg-primary hover:bg-primary/80  font-semibold"
+              className="w-full bg-primary hover:bg-primary/80 font-semibold"
               type="submit"
             >
-              {isPending && <Loader className="h-4 w-4 animate-spin" />}
+              {isPending && <Loader className="h-4 w-4 animate-spin mr-2" />}
               Se connecter
             </Button>
           </form>
         </Form>
 
-        <div className="mt-2 flex items-center justify-center">
+        <div className="mt-2 flex flex-col items-center justify-center gap-1">
           <p className="text-sm text-muted-foreground">
-            Vous n'avez pas de compte?{" "}
+            Vous n'avez pas de compte ?{" "}
             <button
               className="text-primary font-semibold hover:text-primary/80 transition-colors"
               onClick={handleRegisterOpen}
